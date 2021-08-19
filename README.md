@@ -10,7 +10,11 @@
 - Within the `src/controller.test.js` you can change the `backendResDelay` variable to change how long the backend
   takes to respond.
 
-## My thought process while working on this project
+## Time
+
+It took around 6 hours to complete this project.
+
+## Some thoughts
 
 ### First pass at caching ranges
 
@@ -38,10 +42,31 @@ values, which allows me to limit the amount of data requested from the backend.
 
 - Users can make many requests before the first request resolves, so I only resolve the most recent response - all other
   responses are thrown out after the backend is done (after caching the data).
-- It would be nice if we could cancel backend calls that get thrown out. That would increase loading performance
-  if users try fetching lots of data quickly. That can be done with a tool like `axios` or using `AbortController`
-  with fetch.
 - I added timestamps to each of the requests to keep track of responses. We could also use uuid's or
   something, but I figured this was fine for this assignment.
 - I'm assuming the backend is giving the time back to me in the response (within the `datapoint`), so I can cache it.
   This is why I made the datapoint an object - assuming that was the structure.
+
+### Small bit of feedback
+
+The API docs state that the `backend` should be passed into the `Controller` constructor, but the `backend`
+also needs to call the `controller` when the calls are finished. This is a circular dependency and was a bit
+strange to implement (see `src/controller.js` on lines 6-8 for my implementation).
+
+I would probably recommend not passing the backend into the `Controller`, and instead using it as a dependency that
+resolves a promise:
+
+```javascript
+const { backend } = require('./backend');
+
+class Controller {
+  setStartTime = () => {
+    backend.requestTemperatureData()
+      .then(this.receiveTemperatureData); 
+  }
+
+  receiveTemperatureData = () => {
+    // this method will be called when the backend request resolves
+  }
+}
+```
