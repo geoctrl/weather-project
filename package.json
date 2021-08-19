@@ -1,0 +1,15 @@
+{
+  "name": "weather-project",
+  "version": "0.0.0",
+  "main": "src/controller.js",
+  "author": "geoctrl <tonylefler@gmail.com>",
+  "repository": "git@github.com:geoctrl/weather-project.git",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "test-watch": "jest --watch"
+  },
+  "devDependencies": {
+    "jest": "^27.0.6"
+  }
+}
